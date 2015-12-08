@@ -1,0 +1,183 @@
+object MainForm: TMainForm
+  Left = 338
+  Height = 355
+  Top = 212
+  Width = 600
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsToolWindow
+  BorderWidth = 1
+  Caption = 'Скрипт генератор v0.0.1.16'
+  ClientHeight = 336
+  ClientWidth = 600
+  Menu = MainMenu
+  OnShow = FormShow
+  Position = poDesktopCenter
+  LCLVersion = '1.4.4.0'
+  object GenerateBtn: TButton
+    Left = 496
+    Height = 25
+    Top = 304
+    Width = 96
+    Caption = 'Создать .bat'
+    Font.Style = [fsBold]
+    OnClick = GenerateBtnClick
+    ParentFont = False
+    TabOrder = 0
+  end
+  object Label1: TLabel
+    Left = 8
+    Height = 13
+    Top = 8
+    Width = 420
+    Caption = 'Выберите информационную базу для генерации скрипта резервного копирования'
+    ParentColor = False
+  end
+  object Path7zipEdit: TEdit
+    Left = 16
+    Height = 21
+    Top = 228
+    Width = 576
+    OnClick = Path7zipEditClick
+    ParentFont = False
+    TabOrder = 1
+    Text = 'Архиватор не найден! Кликните для указания пути к 7z.exe'
+  end
+  object Label2: TLabel
+    Left = 8
+    Height = 13
+    Top = 212
+    Width = 119
+    Caption = 'Путь к архиватору 7zip'
+    ParentColor = False
+  end
+  object PathCloudEdit: TEdit
+    Left = 16
+    Height = 21
+    Top = 268
+    Width = 456
+    OnChange = PathCloudEditChange
+    OnClick = PathCloudEditClick
+    ParentFont = False
+    TabOrder = 2
+    Text = 'Кликните здесь для выбора директории Яндекс.Диска!'
+  end
+  object Label3: TLabel
+    Left = 8
+    Height = 13
+    Top = 252
+    Width = 173
+    Caption = 'Путь к директории Яндекс.Диска'
+    ParentColor = False
+  end
+  object PasswordEdit: TEdit
+    Left = 16
+    Height = 21
+    Top = 308
+    Width = 456
+    ParentFont = False
+    TabOrder = 3
+    Text = '$StR0ng_Pa55W0Rd_h3R3$'
+  end
+  object Label4: TLabel
+    Left = 9
+    Height = 13
+    Top = 292
+    Width = 134
+    Caption = 'Сложный пароль к архиву'
+    ParentColor = False
+  end
+  object ArcNumSpinEdit: TSpinEdit
+    Left = 496
+    Height = 21
+    Top = 272
+    Width = 96
+    MinValue = 1
+    ParentFont = False
+    TabOrder = 4
+    Value = 5
+  end
+  object Label5: TLabel
+    Left = 487
+    Height = 13
+    Top = 256
+    Width = 105
+    Caption = 'Количество архивов'
+    ParentColor = False
+  end
+  object BasesListView: TListView
+    Left = 16
+    Height = 142
+    Top = 24
+    Width = 576
+    Checkboxes = True
+    Columns = <    
+      item
+        Caption = 'Название информационной базы'
+        MaxWidth = 250
+        MinWidth = 150
+        Width = 250
+      end    
+      item
+        AutoSize = True
+        Caption = 'Путь к базе'
+        Width = 322
+      end>
+    GridLines = True
+    ParentFont = False
+    SortType = stData
+    TabOrder = 5
+    ViewStyle = vsReport
+  end
+  object v8iFileEdit: TEdit
+    Left = 16
+    Height = 21
+    Top = 184
+    Width = 576
+    OnChange = v8iFileEditChange
+    ParentFont = False
+    TabOrder = 6
+  end
+  object Label6: TLabel
+    Left = 8
+    Height = 13
+    Top = 168
+    Width = 217
+    Caption = 'Путь к файлу списка информационных баз'
+    ParentColor = False
+  end
+  object MainMenu: TMainMenu
+    left = 400
+    object FileMenuItem: TMenuItem
+      Caption = 'Файл'
+      object Choosev8iMenuItem: TMenuItem
+        Caption = 'Выбрать файл списка ИБ...'
+        OnClick = Choosev8iMenuItemClick
+      end
+      object ExitMenuItem: TMenuItem
+        Caption = 'Выйти...'
+        OnClick = ExitMenuItemClick
+      end
+    end
+    object AboutMenuItem: TMenuItem
+      Caption = 'О программе...'
+      OnClick = AboutMenuItemClick
+    end
+  end
+  object SaveDialog1: TSaveDialog
+    FileName = 'C:\Users\Николай\Documents\Проекты Lazarus\TestLazarusProject\backup.bat'
+    Filter = 'Скрипт Windows|*.bat'
+    InitialDir = 'C:\Users\Николай\Documents\Проекты Lazarus\TestLazarusProject\'
+    left = 520
+  end
+  object OpenDialog1: TOpenDialog
+    left = 480
+  end
+  object SelectDirectoryDialog1: TSelectDirectoryDialog
+    InitialDir = '%HOMEPATH%'
+    left = 440
+  end
+  object ScanBaseTimer: TTimer
+    OnTimer = ScanBaseTimerTimer
+    left = 560
+  end
+end
