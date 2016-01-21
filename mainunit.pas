@@ -13,6 +13,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    UsePassCB: TCheckBox;
     Label6: TLabel;
     AboutMenuItem: TMenuItem;
     v8iFileEdit: TEdit;
@@ -183,14 +184,18 @@ begin
                 Add('set s7ZPath="'     + Path7zipEdit.Text     + '"');
                 Add('set sCloudPath="'  + ArcPath  + '"');
                 Add('set sDBPath="'     + BasePath              + '\1Cv8.1CD"');
-                Add('set sDBPass="'     + PasswordEdit.Text     + '"');
+                if UsePassCB.Checked then
+                    Add('set sDBPass="'     + PasswordEdit.Text     + '"');
                 Add('set /a iCount = '  + ArcNumSpinEdit.ValueToStr(ArcNumSpinEdit.Value));
                 Add('');
                 Add('for /f "skip=%iCount% usebackq delims=" %%i in (');
                 Add('	`dir /b /a:-d /o:-d /t:w %sCloudPath%`');
                 Add(') do del /f /q %sCloudPath%\%%~i');
                 Add('');
-                Add('%s7ZPath% a %sCloudPath%\baza[%date%-%sHour: =0%%sMinute%].7z %sDBPath% -p%sDBPass%');
+                if UsePassCB.Checked then
+                    Add('%s7ZPath% a %sCloudPath%\baza[%date%-%sHour: =0%%sMinute%].7z %sDBPath% -p%sDBPass%')
+                else
+                    Add('%s7ZPath% a %sCloudPath%\baza[%date%-%sHour: =0%%sMinute%].7z %sDBPath%');
               end;
            Try
              Strings.Text := UTF8ToCP866(Strings.Text);
@@ -247,10 +252,19 @@ end;
 
 
 procedure TMainForm.PathCloudEditClick(Sender: TObject);
+var
+   PathLen: Integer;
 begin
    if SelectDirectoryDialog1.Execute then
       begin
-        PathCloudEdit.Text := SelectDirectoryDialog1.FileName;
+        PathLen := Length(SelectDirectoryDialog1.FileName);
+        if PathLen>3 then
+            PathCloudEdit.Text := SelectDirectoryDialog1.FileName
+        else
+            begin
+               PathCloudEdit.Text := Copy(SelectDirectoryDialog1.FileName, 0,(PathLen-1));
+               ShowMessage('Длина пути менее 3 символов');
+            end;
       end;
 end;
 

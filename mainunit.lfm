@@ -1,12 +1,12 @@
 object MainForm: TMainForm
-  Left = 338
+  Left = 342
   Height = 355
-  Top = 212
+  Top = 182
   Width = 600
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   BorderWidth = 1
-  Caption = 'Скрипт генератор v0.0.1.16'
+  Caption = 'Скрипт генератор v0.0.1.17'
   ClientHeight = 336
   ClientWidth = 600
   Menu = MainMenu
@@ -59,27 +59,27 @@ object MainForm: TMainForm
     OnClick = PathCloudEditClick
     ParentFont = False
     TabOrder = 2
-    Text = 'Кликните здесь для выбора директории Яндекс.Диска!'
+    Text = 'Кликните здесь для выбора директории с архивами'
   end
   object Label3: TLabel
     Left = 8
     Height = 13
     Top = 252
-    Width = 173
-    Caption = 'Путь к директории Яндекс.Диска'
+    Width = 157
+    Caption = 'Путь к директории с архивами'
     ParentColor = False
   end
   object PasswordEdit: TEdit
-    Left = 16
+    Left = 165
     Height = 21
     Top = 308
-    Width = 456
+    Width = 307
     ParentFont = False
     TabOrder = 3
     Text = '$StR0ng_Pa55W0Rd_h3R3$'
   end
   object Label4: TLabel
-    Left = 9
+    Left = 160
     Height = 13
     Top = 292
     Width = 134
@@ -144,6 +144,16 @@ object MainForm: TMainForm
     Width = 217
     Caption = 'Путь к файлу списка информационных баз'
     ParentColor = False
+  end
+  object UsePassCB: TCheckBox
+    Left = 16
+    Height = 17
+    Top = 312
+    Width = 130
+    Caption = 'Использовать пароль'
+    Checked = True
+    State = cbChecked
+    TabOrder = 7
   end
   object MainMenu: TMainMenu
     left = 400
