@@ -1,62 +1,51 @@
 object AboutForm: TAboutForm
-  Left = 393
-  Height = 240
-  Top = 195
-  Width = 371
+  Left = 484
+  Height = 124
+  Top = 249
+  Width = 333
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'О программе'
-  ClientHeight = 240
-  ClientWidth = 371
+  ClientHeight = 124
+  ClientWidth = 333
   Position = poMainFormCenter
   LCLVersion = '1.4.4.0'
   object Panel1: TPanel
     Left = 0
-    Height = 240
+    Height = 124
     Top = 0
-    Width = 371
+    Width = 333
     Align = alClient
-    ClientHeight = 240
-    ClientWidth = 371
+    ClientHeight = 124
+    ClientWidth = 333
     Color = clWhite
     ParentColor = False
     TabOrder = 0
     object Panel2: TPanel
       Left = 1
-      Height = 238
+      Height = 122
       Top = 1
-      Width = 369
+      Width = 331
       Align = alClient
       BorderWidth = 1
       BorderStyle = bsSingle
-      ClientHeight = 234
-      ClientWidth = 365
+      ClientHeight = 118
+      ClientWidth = 327
       TabOrder = 0
-      object Label2: TLabel
-        Left = 2
-        Height = 26
-        Top = 206
-        Width = 361
-        Align = alBottom
-        BidiMode = bdRightToLeft
-        Caption = 'Идея и реализация'#13#10'Тян Семен'
-        ParentBidiMode = False
-        ParentColor = False
-      end
       object Label3: TLabel
-        Left = 16
-        Height = 65
-        Top = 136
-        Width = 306
+        Left = 8
+        Height = 75
+        Top = 32
+        Width = 312
         Caption = 'Поддержка и сопровождение по адресу:'#13#10'346780, Ростовская обл., г. Азов, Ленинградская ул., д. 73'#13#10'ООО "Ай Ти-Партнер"'#13#10'Телефон: 8 (86342) 5-44-00'#13#10'E-mail: mycloud@its61.ru'
         ParentColor = False
       end
       object Label1: TLabel
-        Left = 16
+        Left = 8
         Height = 18
-        Top = 112
-        Width = 340
-        Caption = 'Генератор bat-файла для облачного архива'
+        Top = 8
+        Width = 116
+        Caption = 'ИТС-помощник'
         Font.Height = -15
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -64,11 +53,10 @@ object AboutForm: TAboutForm
         ParentFont = False
       end
       object Image1: TImage
-        Left = 2
-        Height = 106
-        Top = 2
-        Width = 361
-        Align = alTop
+        Left = 176
+        Height = 40
+        Top = 64
+        Width = 144
         Picture.Data = {
           0A544A706567496D6167650A610000FFD8FFE000104A46494600010101012C01
           2C0000FFDB0043000302020302020303030304030304050805050404050A0707

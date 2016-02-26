@@ -6,7 +6,7 @@
     <General>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <Title Value="ScriptGenerator"/>
+      <Title Value="Помощник ИТС"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
@@ -21,11 +21,11 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
-      <RevisionNr Value="1"/>
-      <BuildNr Value="17"/>
+      <RevisionNr Value="2"/>
+      <BuildNr Value="20"/>
       <Language Value="0419"/>
       <Attributes pvaDebug="True"/>
-      <StringTable CompanyName="IT Partner" FileDescription="Script Generator for ITS61 cloud service" InternalName="MCScriptGenerator" OriginalFilename="MCScriptGenerator.exe" ProductName="My Cloud Script Generator" ProductVersion="0.0.1"/>
+      <StringTable CompanyName="IT Partner" FileDescription="Script Generator for ITS61 cloud service" InternalName="MCScriptGenerator" OriginalFilename="MCScriptGenerator.exe" ProductName="My Cloud Script Generator" ProductVersion="0.0.2"/>
     </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>

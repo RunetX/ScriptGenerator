@@ -15,10 +15,10 @@ type
   TAboutForm = class(TForm)
     Image1: TImage;
     Label1: TLabel;
-    Label2: TLabel;
     Label3: TLabel;
     Panel1: TPanel;
     Panel2: TPanel;
+
   private
     { private declarations }
   public

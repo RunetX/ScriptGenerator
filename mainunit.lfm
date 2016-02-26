@@ -1,162 +1,258 @@
 object MainForm: TMainForm
-  Left = 342
-  Height = 355
-  Top = 182
-  Width = 600
+  Left = 289
+  Height = 385
+  Top = 179
+  Width = 610
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   BorderWidth = 1
-  Caption = 'Скрипт генератор v0.0.1.17'
-  ClientHeight = 336
-  ClientWidth = 600
+  Caption = 'ИТС помощник'
+  ClientHeight = 365
+  ClientWidth = 610
   Menu = MainMenu
   OnShow = FormShow
   Position = poDesktopCenter
   LCLVersion = '1.4.4.0'
-  object GenerateBtn: TButton
-    Left = 496
-    Height = 25
-    Top = 304
-    Width = 96
-    Caption = 'Создать .bat'
-    Font.Style = [fsBold]
-    OnClick = GenerateBtnClick
-    ParentFont = False
+  object PageControl1: TPageControl
+    Left = 1
+    Height = 363
+    Top = 1
+    Width = 608
+    ActivePage = TabSheet1
+    Align = alClient
+    TabIndex = 0
     TabOrder = 0
-  end
-  object Label1: TLabel
-    Left = 8
-    Height = 13
-    Top = 8
-    Width = 420
-    Caption = 'Выберите информационную базу для генерации скрипта резервного копирования'
-    ParentColor = False
-  end
-  object Path7zipEdit: TEdit
-    Left = 16
-    Height = 21
-    Top = 228
-    Width = 576
-    OnClick = Path7zipEditClick
-    ParentFont = False
-    TabOrder = 1
-    Text = 'Архиватор не найден! Кликните для указания пути к 7z.exe'
-  end
-  object Label2: TLabel
-    Left = 8
-    Height = 13
-    Top = 212
-    Width = 119
-    Caption = 'Путь к архиватору 7zip'
-    ParentColor = False
-  end
-  object PathCloudEdit: TEdit
-    Left = 16
-    Height = 21
-    Top = 268
-    Width = 456
-    OnChange = PathCloudEditChange
-    OnClick = PathCloudEditClick
-    ParentFont = False
-    TabOrder = 2
-    Text = 'Кликните здесь для выбора директории с архивами'
-  end
-  object Label3: TLabel
-    Left = 8
-    Height = 13
-    Top = 252
-    Width = 157
-    Caption = 'Путь к директории с архивами'
-    ParentColor = False
-  end
-  object PasswordEdit: TEdit
-    Left = 165
-    Height = 21
-    Top = 308
-    Width = 307
-    ParentFont = False
-    TabOrder = 3
-    Text = '$StR0ng_Pa55W0Rd_h3R3$'
-  end
-  object Label4: TLabel
-    Left = 160
-    Height = 13
-    Top = 292
-    Width = 134
-    Caption = 'Сложный пароль к архиву'
-    ParentColor = False
-  end
-  object ArcNumSpinEdit: TSpinEdit
-    Left = 496
-    Height = 21
-    Top = 272
-    Width = 96
-    MinValue = 1
-    ParentFont = False
-    TabOrder = 4
-    Value = 5
-  end
-  object Label5: TLabel
-    Left = 487
-    Height = 13
-    Top = 256
-    Width = 105
-    Caption = 'Количество архивов'
-    ParentColor = False
-  end
-  object BasesListView: TListView
-    Left = 16
-    Height = 142
-    Top = 24
-    Width = 576
-    Checkboxes = True
-    Columns = <    
-      item
-        Caption = 'Название информационной базы'
-        MaxWidth = 250
-        MinWidth = 150
-        Width = 250
-      end    
-      item
-        AutoSize = True
-        Caption = 'Путь к базе'
-        Width = 322
-      end>
-    GridLines = True
-    ParentFont = False
-    SortType = stData
-    TabOrder = 5
-    ViewStyle = vsReport
-  end
-  object v8iFileEdit: TEdit
-    Left = 16
-    Height = 21
-    Top = 184
-    Width = 576
-    OnChange = v8iFileEditChange
-    ParentFont = False
-    TabOrder = 6
-  end
-  object Label6: TLabel
-    Left = 8
-    Height = 13
-    Top = 168
-    Width = 217
-    Caption = 'Путь к файлу списка информационных баз'
-    ParentColor = False
-  end
-  object UsePassCB: TCheckBox
-    Left = 16
-    Height = 17
-    Top = 312
-    Width = 130
-    Caption = 'Использовать пароль'
-    Checked = True
-    State = cbChecked
-    TabOrder = 7
+    object TabSheet1: TTabSheet
+      Caption = 'Формирование файла сценария'
+      ClientHeight = 335
+      ClientWidth = 600
+      object Path7zipEdit: TEdit
+        Left = 4
+        Height = 23
+        Top = 120
+        Width = 448
+        OnClick = Path7zipEditClick
+        ParentFont = False
+        TabOrder = 5
+        Text = 'Архиватор не найден! Кликните для указания пути к 7z.exe'
+        Visible = False
+      end
+      object v8iFileEdit: TEdit
+        Left = 4
+        Height = 23
+        Top = 88
+        Width = 448
+        OnChange = v8iFileEditChange
+        ParentFont = False
+        TabOrder = 3
+        Visible = False
+      end
+      object BasesListView: TListView
+        Left = 14
+        Height = 142
+        Top = 16
+        Width = 470
+        Checkboxes = True
+        Columns = <        
+          item
+            Caption = 'Название информационной базы'
+            MaxWidth = 470
+            MinWidth = 150
+            Width = 460
+          end>
+        GridLines = True
+        HideSelection = False
+        ParentFont = False
+        ScrollBars = ssVertical
+        SortType = stData
+        TabOrder = 0
+        ViewStyle = vsReport
+        OnClick = BasesListViewClick
+      end
+      object Label7: TLabel
+        Left = 451
+        Height = 1
+        Top = 168
+        Width = 1
+        ParentColor = False
+      end
+      object StatusBar1: TStatusBar
+        Left = 0
+        Height = 23
+        Top = 312
+        Width = 600
+        Panels = <>
+      end
+      object GroupBox1: TGroupBox
+        Left = 4
+        Height = 64
+        Top = 176
+        Width = 586
+        Caption = 'Структура каталогов 1С'
+        ClientHeight = 44
+        ClientWidth = 582
+        TabOrder = 1
+        object SelectDriveCmbx: TComboBox
+          Left = 16
+          Height = 23
+          Top = 8
+          Width = 116
+          ItemHeight = 15
+          OnChange = SelectDriveCmbxChange
+          TabOrder = 0
+          Text = 'Выберите диск...'
+        end
+        object Create1CDirsBtn: TButton
+          Left = 136
+          Height = 25
+          Top = 8
+          Width = 96
+          Caption = 'Создать'
+          Font.Style = [fsBold]
+          OnClick = Create1CDirsBtnClick
+          ParentFont = False
+          TabOrder = 1
+        end
+        object PathCloudEdit: TEdit
+          Left = 256
+          Height = 23
+          Top = 8
+          Width = 318
+          OnClick = PathCloudEditClick
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 2
+          Text = 'Путь к каталогу с архивами'
+        end
+      end
+      object Panel1: TPanel
+        Left = 4
+        Height = 56
+        Top = 248
+        Width = 586
+        ClientHeight = 56
+        ClientWidth = 586
+        Color = clMenuHighlight
+        ParentColor = False
+        TabOrder = 2
+        object Label4: TLabel
+          Left = 8
+          Height = 15
+          Top = 3
+          Width = 154
+          Caption = 'Сложный пароль к архиву'
+          Font.Color = clWhite
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object PasswordEdit: TEdit
+          Left = 16
+          Height = 23
+          Top = 21
+          Width = 264
+          ParentFont = False
+          TabOrder = 0
+          Text = '$StR0ng_Pa55W0Rd_h3R3$'
+        end
+        object UsePassCB: TCheckBox
+          Left = 288
+          Height = 19
+          Top = 24
+          Width = 20
+          Color = clHighlightText
+          Font.Color = clHighlightText
+          ParentColor = False
+          ParentFont = False
+          TabOrder = 1
+        end
+        object Label5: TLabel
+          Left = 424
+          Height = 15
+          Top = 3
+          Width = 121
+          Caption = 'Количество архивов'
+          Font.Color = clHighlightText
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object ArcNumSpinEdit: TSpinEdit
+          Left = 432
+          Height = 23
+          Top = 21
+          Width = 40
+          MinValue = 1
+          ParentFont = False
+          TabOrder = 2
+          Value = 5
+        end
+        object GenerateBtn: TButton
+          Left = 480
+          Height = 25
+          Top = 19
+          Width = 96
+          Caption = 'Создать .bat'
+          Font.Style = [fsBold]
+          OnClick = GenerateBtnClick
+          ParentFont = False
+          TabOrder = 3
+        end
+        object Label1: TLabel
+          Left = 305
+          Height = 15
+          Top = 26
+          Width = 108
+          Caption = 'Установить пароль'
+          Font.Color = clHighlightText
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+      end
+      object CheckBDBitBtn: TBitBtn
+        Left = 493
+        Height = 30
+        Hint = 'Я сделал резервную копию перед нажатием'
+        Top = 16
+        Width = 97
+        Caption = 'Проверить'
+        Glyph.Data = {
+          36030000424D3603000000000000360000002800000010000000100000000100
+          1800000000000003000064000000640000000000000000000000FFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFDFDFEFDFDFEFEFEFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFDFDE1E1E1C4
+          CCCDC7C4BFE0E0E0FDFDFDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFCFCFCD2D4D5B1DFE79DE8F8DAAE7CD2AF95DDDCDAFDFDFDFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFD8D9DA9FDDEA80DDFD69
+          D1F9BA8242C28444CAA282E4E5E5FEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FEFFFFEEEDED9BD2DE75D9FD66D2FE4CC7F8AD6F2CB97D38B97735CBB09FEFEF
+          EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFEFEBBCFD373DCFA73D7FF5BD0FE48
+          C5F7A66522B57934B87D3BBB7C47D3D0CEFEFEFEFFFFFFFFFFFFFFFFFFFFFFFF
+          EEEDED8DD4E478DBFE6AD5FE4CCCFF43C3F69E5B19AC6F2BB87B3EB57538C2A4
+          90EFEFEFFFFFFFFFFFFFFFFFFFFFFFFFD5DCDC78E4F67FDEFD5AD3FC45CCFD41
+          C5F4995415A5621FAF6F34B4743EBA8561DDDEDEFFFFFFFFFFFFFFFFFFFEFEFE
+          D5CAC3C49D73B17E459E5D159C5B129F611D49BEEB4AC3EF52C5F158C5F260C4
+          ECCDCFD2FFFFFFFFFFFFFFFFFFFEFEFED5C6BCC79D73BB8D5EAC7130A05C0EA1
+          5C0D45C2FB41C3FE47BFFE4DBDFE4FBDFBBEC7CCFFFFFFFFFFFFFFFFFFFEFEFE
+          D7C7BDCEA57EC79C75BE9265B98754B0793E66D4FA50C9FD49C0FF4ABBFF49B6
+          FBBAC6CCFFFFFFFFFFFFFFFFFFFEFEFEE1D3C9D7B390D6B699D9BB9FD0AE8DC3
+          986F8BEAFC7AE2FE72DDFF6DD5FF68CEFCBDC7CBFFFFFFFFFFFFFFFFFFFFFFFF
+          EDEAE8E1D2C7DCC7B5E8D6C4E0C9B3D0AB8A88EDFC78E4FF73E0FC89D3E9A0CA
+          D4D2D4D5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFCFCFCEFEFEFD9D2CFDCC5B3CC
+          A8877EEDFB82DFEFB0CACFE2E1E1F9FAF9FFFFFEFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFAFAF9D8D3D1C8B0A09CD7DBD1D4D5FAFAFAFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFEFEF0
+          F0F0F1F0F0FEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        }
+        OnClick = CheckBDBitBtnClick
+        TabOrder = 6
+      end
+    end
   end
   object MainMenu: TMainMenu
-    left = 400
+    left = 24
+    top = 440
     object FileMenuItem: TMenuItem
       Caption = 'Файл'
       object Choosev8iMenuItem: TMenuItem
@@ -173,21 +269,25 @@ object MainForm: TMainForm
       OnClick = AboutMenuItemClick
     end
   end
+  object SelectDirectoryDialog1: TSelectDirectoryDialog
+    InitialDir = '%HOMEPATH%'
+    left = 64
+    top = 440
+  end
+  object OpenDialog1: TOpenDialog
+    left = 104
+    top = 440
+  end
   object SaveDialog1: TSaveDialog
     FileName = 'C:\Users\Николай\Documents\Проекты Lazarus\TestLazarusProject\backup.bat'
     Filter = 'Скрипт Windows|*.bat'
     InitialDir = 'C:\Users\Николай\Documents\Проекты Lazarus\TestLazarusProject\'
-    left = 520
-  end
-  object OpenDialog1: TOpenDialog
-    left = 480
-  end
-  object SelectDirectoryDialog1: TSelectDirectoryDialog
-    InitialDir = '%HOMEPATH%'
-    left = 440
+    left = 144
+    top = 440
   end
   object ScanBaseTimer: TTimer
     OnTimer = ScanBaseTimerTimer
-    left = 560
+    left = 184
+    top = 440
   end
 end

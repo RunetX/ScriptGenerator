@@ -12,6 +12,7 @@ uses
 {$R *.res}
 
 begin
+  Application.Title:='Помощник ИТС';
   RequireDerivedFormResource := True;
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
