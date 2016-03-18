@@ -521,7 +521,8 @@ Var
  AppDataPath: String;
 begin
 
-  AppDataPath := GetWin('%AppData%');
+  AppDataPath := GetEnvironmentVariableUTF8('APPDATA');
+  //GetWin('%AppData%');
   v8iFileEdit.Text := AppDataPath + '\1C\1CEStart\ibases.v8i';
 
   // Проверка установленного архиватора 7zip
