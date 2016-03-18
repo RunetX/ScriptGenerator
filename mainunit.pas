@@ -5,9 +5,9 @@ unit mainunit;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Classes, SysUtils, LazFileUtils, Forms, Controls, Graphics, Dialogs, StdCtrls,
   Menus, Spin, ComCtrls, ExtCtrls, Buttons, INIFiles, Windows, translit,
-  aboutunit, lconvencoding, ShellApi;
+  aboutunit, lconvencoding, ShellApi, lazutf8;
 
 type
     TFileVersionInfo = record
@@ -52,6 +52,11 @@ type
     UsePassCB: TCheckBox;
     v8iFileEdit: TEdit;
     procedure AboutMenuItemClick(Sender: TObject);
+    procedure BasesListViewChange(Sender: TObject; Item: TListItem;
+      Change: TItemChange);
+    procedure BasesListViewEnter(Sender: TObject);
+    procedure BasesListViewMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure BasesListViewClick(Sender: TObject);
     procedure CheckBDBitBtnClick(Sender: TObject);
     procedure Choosev8iMenuItemClick(Sender: TObject);
@@ -62,16 +67,19 @@ type
     procedure Path7zipEditClick(Sender: TObject);
     procedure PathCloudEditClick(Sender: TObject);
     procedure ScanBaseTimerTimer(Sender: TObject);
-    procedure CheckBases;
-    procedure LoadBLFile;
-    procedure OpenV8I;
-    procedure FillDrives;
     procedure SelectDriveCmbxChange(Sender: TObject);
     procedure v8iFileEditChange(Sender: TObject);
     function CrDir(Path: String):integer;
     function GetFileVersion(const AFileName:string):TFileVersionInfo;
   private
     { private declarations }
+    FListItem: TListItem;
+    procedure CheckBases;
+    procedure LoadBLFile;
+    procedure OpenV8I;
+    procedure FillDrives;
+    procedure SelectedListItemStateSave;
+    procedure SelectedListItemStateRestore;
   public
     { public declarations }
   end;
@@ -151,7 +159,9 @@ begin
         Result := 1;
       end
     else
-      Result := 0;
+      Result := 0
+  else
+    ShowMessage('Директория ' + Path + ' уже создана');
 end;
 
 procedure TMainForm.FillDrives;
@@ -417,9 +427,46 @@ begin
   AboutForm.Show;
 end;
 
+procedure TMainForm.BasesListViewChange(Sender: TObject; Item: TListItem;
+  Change: TItemChange);
+begin
+  if (Change=ctState) then
+     SelectedListItemStateSave;
+end;
+
+procedure TMainForm.BasesListViewEnter(Sender: TObject);
+begin
+  if BasesListView.Selected = nil then
+  begin
+    FListItem :=BasesListView.Items[0]; // Initialization
+    SelectedListItemStateRestore;
+  end;
+end;
+
+procedure TMainForm.BasesListViewMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if BasesListView.GetItemAt(X,Y) = nil then
+    begin
+      SelectedListItemStateRestore;
+    end;
+end;
+
+procedure TMainForm.SelectedListItemStateRestore;
+begin
+  BasesListView.Selected := FListItem;
+  BasesListView.Selected.Focused := True; // Always focused
+end;
+
+procedure TMainForm.SelectedListItemStateSave;
+begin
+  FListItem := BasesListView.Selected;
+end;
+
 procedure TMainForm.BasesListViewClick(Sender: TObject);
 begin
-  StatusBar1.SimpleText:= BasesListView.Items[BasesListView.Selected.Index].SubItems[0];
+ if Assigned(BasesListView.Selected) then
+   StatusBar1.SimpleText := BasesListView.Items[BasesListView.Selected.Index].SubItems[0]
 end;
 
 procedure TMainForm.CheckBDBitBtnClick(Sender: TObject);
@@ -427,6 +474,7 @@ var
   PFPath:     String;
   FilePath:   String;
   ComLine:    String;
+  ComLineSys: String;
   FileVer:TFileVersionInfo;
 begin
   ShowMessage('Сделайте копию перед проверкой!');
@@ -436,7 +484,7 @@ begin
              Copy(StatusBar1.SimpleText, 7, Length(StatusBar1.SimpleText)-8)
              + '\1Cv8.1CD" ';
 
-  PFPath   := CP866ToUTF8(SysUtils.GetEnvironmentVariable('PROGRAMFILES'));
+  PFPath   := GetEnvironmentVariableUTF8('PROGRAMFILES');
   FilePath := PFPath + '\1cv8\common\1cestart.exe';
 
   if FileExists(FilePath) then
@@ -444,8 +492,12 @@ begin
       FileVer  := GetFileVersion(FilePath);
       ComLine  := ComLine + IntToStr(FileVer.Major)+'.'+IntToStr(FileVer.Minor)+'.'+
                         IntToStr(FileVer.Revision)+'.'+IntToStr(FileVer.Build);
+      ComLineSys := UTF8ToCP1251(ComLine);
       if FileExists('runchdbfl.exe') then
-        RunAsAdmin(MainForm.Handle, 'runchdbfl.exe', ComLine)
+        if SysUtils.Win32MajorVersion >= 6 then
+            RunAsAdmin(MainForm.Handle, 'runchdbfl.exe', ComLineSys)
+        else
+            ShellExecute(0,nil, PChar('runchdbfl.exe'),PChar(ComLineSys),nil,1)
       else
         ShowMessage('Не найден стартер chdbfl.exe!');
     end
@@ -453,16 +505,27 @@ begin
     ShowMessage('Файл 1cestart.exe не найден!');
 end;
 
+function GetWin(Comand: string): string;
+var
+  buff: array [0 .. $FF] of char;
+begin
+  ExpandEnvironmentStrings(PChar(Comand), buff, SizeOf(buff));
+  Result := buff;
+end;
+
 procedure TMainForm.FormShow(Sender: TObject);
 Var
  FilePath: String;
  PartPath: String;
+
+ AppDataPath: String;
 begin
 
-  v8iFileEdit.Text := CP866ToUTF8(SysUtils.GetEnvironmentVariable('APPDATA')) + '\1C\1CEStart\ibases.v8i';;
+  AppDataPath := GetWin('%AppData%');
+  v8iFileEdit.Text := AppDataPath + '\1C\1CEStart\ibases.v8i';
 
   // Проверка установленного архиватора 7zip
-  PartPath := CP866ToUTF8(SysUtils.GetEnvironmentVariable('PROGRAMFILES'));
+  PartPath := GetEnvironmentVariableUTF8('PROGRAMFILES');
   FilePath := PartPath + '\7-Zip\7z.exe';
   if(FileExistsUTF8(FilePath))then
       Path7zipEdit.Text := FilePath

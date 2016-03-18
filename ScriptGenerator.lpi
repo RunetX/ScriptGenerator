@@ -22,7 +22,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <RevisionNr Value="2"/>
-      <BuildNr Value="20"/>
+      <BuildNr Value="21"/>
       <Language Value="0419"/>
       <Attributes pvaDebug="True"/>
       <StringTable CompanyName="IT Partner" FileDescription="Script Generator for ITS61 cloud service" InternalName="MCScriptGenerator" OriginalFilename="MCScriptGenerator.exe" ProductName="My Cloud Script Generator" ProductVersion="0.0.2"/>

@@ -1,21 +1,21 @@
 object MainForm: TMainForm
-  Left = 289
+  Left = 282
   Height = 385
-  Top = 179
+  Top = 152
   Width = 610
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   BorderWidth = 1
   Caption = 'ИТС помощник'
-  ClientHeight = 365
+  ClientHeight = 366
   ClientWidth = 610
   Menu = MainMenu
   OnShow = FormShow
   Position = poDesktopCenter
-  LCLVersion = '1.4.4.0'
+  LCLVersion = '1.6.0.4'
   object PageControl1: TPageControl
     Left = 1
-    Height = 363
+    Height = 364
     Top = 1
     Width = 608
     ActivePage = TabSheet1
@@ -24,27 +24,27 @@ object MainForm: TMainForm
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Формирование файла сценария'
-      ClientHeight = 335
+      ClientHeight = 338
       ClientWidth = 600
+      object v8iFileEdit: TEdit
+        Left = 4
+        Height = 21
+        Top = 88
+        Width = 448
+        OnChange = v8iFileEditChange
+        ParentFont = False
+        TabOrder = 3
+        Visible = False
+      end
       object Path7zipEdit: TEdit
         Left = 4
-        Height = 23
+        Height = 21
         Top = 120
         Width = 448
         OnClick = Path7zipEditClick
         ParentFont = False
         TabOrder = 5
         Text = 'Архиватор не найден! Кликните для указания пути к 7z.exe'
-        Visible = False
-      end
-      object v8iFileEdit: TEdit
-        Left = 4
-        Height = 23
-        Top = 88
-        Width = 448
-        OnChange = v8iFileEditChange
-        ParentFont = False
-        TabOrder = 3
         Visible = False
       end
       object BasesListView: TListView
@@ -63,11 +63,16 @@ object MainForm: TMainForm
         GridLines = True
         HideSelection = False
         ParentFont = False
+        ReadOnly = True
+        RowSelect = True
         ScrollBars = ssVertical
         SortType = stData
         TabOrder = 0
         ViewStyle = vsReport
+        OnChange = BasesListViewChange
         OnClick = BasesListViewClick
+        OnEnter = BasesListViewEnter
+        OnMouseUp = BasesListViewMouseUp
       end
       object Label7: TLabel
         Left = 451
@@ -78,8 +83,8 @@ object MainForm: TMainForm
       end
       object StatusBar1: TStatusBar
         Left = 0
-        Height = 23
-        Top = 312
+        Height = 20
+        Top = 318
         Width = 600
         Panels = <>
       end
@@ -89,15 +94,15 @@ object MainForm: TMainForm
         Top = 176
         Width = 586
         Caption = 'Структура каталогов 1С'
-        ClientHeight = 44
+        ClientHeight = 46
         ClientWidth = 582
         TabOrder = 1
         object SelectDriveCmbx: TComboBox
           Left = 16
-          Height = 23
+          Height = 21
           Top = 8
           Width = 116
-          ItemHeight = 15
+          ItemHeight = 13
           OnChange = SelectDriveCmbxChange
           TabOrder = 0
           Text = 'Выберите диск...'
@@ -115,7 +120,7 @@ object MainForm: TMainForm
         end
         object PathCloudEdit: TEdit
           Left = 256
-          Height = 23
+          Height = 21
           Top = 8
           Width = 318
           OnClick = PathCloudEditClick
@@ -137,7 +142,7 @@ object MainForm: TMainForm
         TabOrder = 2
         object Label4: TLabel
           Left = 8
-          Height = 15
+          Height = 13
           Top = 3
           Width = 154
           Caption = 'Сложный пароль к архиву'
@@ -148,7 +153,7 @@ object MainForm: TMainForm
         end
         object PasswordEdit: TEdit
           Left = 16
-          Height = 23
+          Height = 21
           Top = 21
           Width = 264
           ParentFont = False
@@ -156,9 +161,9 @@ object MainForm: TMainForm
           Text = '$StR0ng_Pa55W0Rd_h3R3$'
         end
         object UsePassCB: TCheckBox
-          Left = 288
-          Height = 19
-          Top = 24
+          Left = 296
+          Height = 17
+          Top = 23
           Width = 20
           Color = clHighlightText
           Font.Color = clHighlightText
@@ -168,9 +173,9 @@ object MainForm: TMainForm
         end
         object Label5: TLabel
           Left = 424
-          Height = 15
+          Height = 13
           Top = 3
-          Width = 121
+          Width = 119
           Caption = 'Количество архивов'
           Font.Color = clHighlightText
           Font.Style = [fsBold]
@@ -179,7 +184,7 @@ object MainForm: TMainForm
         end
         object ArcNumSpinEdit: TSpinEdit
           Left = 432
-          Height = 23
+          Height = 21
           Top = 21
           Width = 40
           MinValue = 1
@@ -199,10 +204,10 @@ object MainForm: TMainForm
           TabOrder = 3
         end
         object Label1: TLabel
-          Left = 305
-          Height = 15
-          Top = 26
-          Width = 108
+          Left = 288
+          Height = 13
+          Top = 3
+          Width = 114
           Caption = 'Установить пароль'
           Font.Color = clHighlightText
           Font.Style = [fsBold]
