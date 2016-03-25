@@ -9,7 +9,7 @@ object AboutForm: TAboutForm
   ClientHeight = 124
   ClientWidth = 333
   Position = poMainFormCenter
-  LCLVersion = '1.4.4.0'
+  LCLVersion = '1.6.0.4'
   object Panel1: TPanel
     Left = 0
     Height = 124
@@ -34,10 +34,10 @@ object AboutForm: TAboutForm
       TabOrder = 0
       object Label3: TLabel
         Left = 8
-        Height = 75
+        Height = 65
         Top = 32
-        Width = 312
-        Caption = 'Поддержка и сопровождение по адресу:'#13#10'346780, Ростовская обл., г. Азов, Ленинградская ул., д. 73'#13#10'ООО "Ай Ти-Партнер"'#13#10'Телефон: 8 (86342) 5-44-00'#13#10'E-mail: mycloud@its61.ru'
+        Width = 300
+        Caption = 'Поддержка и сопровождение по адресу:'#13#10'346780, Ростовская обл., г. Азов, Ленинградская ул., д. 73'#13#10'ООО "Ай Ти-Партнер"'#13#10'Телефон: +7-989-629-57-40'#13#10'E-mail: helper@its61.ru'
         ParentColor = False
       end
       object Label1: TLabel

@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 282
+  Left = 425
   Height = 385
-  Top = 152
+  Top = 153
   Width = 610
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
@@ -27,20 +27,20 @@ object MainForm: TMainForm
       ClientHeight = 338
       ClientWidth = 600
       object v8iFileEdit: TEdit
-        Left = 4
+        Left = 493
         Height = 21
-        Top = 88
-        Width = 448
+        Top = 56
+        Width = 99
         OnChange = v8iFileEditChange
         ParentFont = False
         TabOrder = 3
         Visible = False
       end
       object Path7zipEdit: TEdit
-        Left = 4
+        Left = 493
         Height = 21
-        Top = 120
-        Width = 448
+        Top = 88
+        Width = 99
         OnClick = Path7zipEditClick
         ParentFont = False
         TabOrder = 5
@@ -66,13 +66,13 @@ object MainForm: TMainForm
         ReadOnly = True
         RowSelect = True
         ScrollBars = ssVertical
-        SortType = stData
+        SortColumn = 0
+        SortType = stText
         TabOrder = 0
         ViewStyle = vsReport
         OnChange = BasesListViewChange
         OnClick = BasesListViewClick
         OnEnter = BasesListViewEnter
-        OnMouseUp = BasesListViewMouseUp
       end
       object Label7: TLabel
         Left = 451
@@ -144,7 +144,7 @@ object MainForm: TMainForm
           Left = 8
           Height = 13
           Top = 3
-          Width = 154
+          Width = 155
           Caption = 'Сложный пароль к архиву'
           Font.Color = clWhite
           Font.Style = [fsBold]
@@ -175,7 +175,7 @@ object MainForm: TMainForm
           Left = 424
           Height = 13
           Top = 3
-          Width = 119
+          Width = 121
           Caption = 'Количество архивов'
           Font.Color = clHighlightText
           Font.Style = [fsBold]
@@ -207,7 +207,7 @@ object MainForm: TMainForm
           Left = 288
           Height = 13
           Top = 3
-          Width = 114
+          Width = 116
           Caption = 'Установить пароль'
           Font.Color = clHighlightText
           Font.Style = [fsBold]

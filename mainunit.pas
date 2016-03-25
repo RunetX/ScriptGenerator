@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, LazFileUtils, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Menus, Spin, ComCtrls, ExtCtrls, Buttons, INIFiles, Windows, translit,
+  Menus, Spin, ComCtrls, ExtCtrls, Buttons, INIFiles, Windows,
   aboutunit, lconvencoding, ShellApi, lazutf8;
 
 type
@@ -80,6 +80,7 @@ type
     procedure FillDrives;
     procedure SelectedListItemStateSave;
     procedure SelectedListItemStateRestore;
+
   public
     { public declarations }
   end;
@@ -92,6 +93,87 @@ implementation
 {$R *.lfm}
 
 { TMainForm }
+
+procedure TMainForm.FormShow(Sender: TObject);
+var
+ FilePath: String;
+ PartPath: String;
+
+ AppDataPath: String;
+begin
+
+  AppDataPath := GetEnvironmentVariableUTF8('APPDATA');
+  // Задание полного пути к списку ИБ
+  v8iFileEdit.Text := AppDataPath + '\1C\1CEStart\ibases.v8i';
+
+  // Проверка установленного архиватора 7zip
+  PartPath := GetEnvironmentVariableUTF8('PROGRAMFILES');
+  FilePath := PartPath + '\7-Zip\7z.exe';
+  if(FileExistsUTF8(FilePath))then
+      Path7zipEdit.Text := FilePath
+  else
+    begin
+      PartPath := Copy(PartPath, 0,(length(PartPath)-6));
+      FilePath := PartPath + '\7-Zip\7z.exe';
+      if(FileExistsUTF8(FilePath))then
+         Path7zipEdit.Text := FilePath
+    end;
+
+  // Установка пути сохранения скрипта по умолчанию
+  SaveDialog1.InitialDir := FilePath;
+
+  // Проверка запущенных баз
+  CheckBases;
+
+  // Заполнение списка системных дисков
+  FillDrives;
+end;
+
+// Проверка наличия временного файла 1Cv8tmp.1CD в каталоге ИБ
+// и проставление галочки в случае отсутствия
+procedure TMainForm.CheckBases;
+var
+ i: Integer;
+ BasePath: String;
+begin
+    if BasesListView.Items.Count>0 then
+        begin
+            for i:=0 to BasesListView.Items.Count-1 do
+                begin
+                    BasePath := BasesListView.Items.Item[i].SubItems[0];
+                    BasePath := Copy(BasePath, 7, Length(BasePath)-8);
+
+                    BasesListView.Items.Item[i].Checked :=
+                    not(FileExistsUTF8(BasePath + '\1Cv8tmp.1CD'));
+                end;
+        end;
+end;
+
+// Заполнение ComboBox списком доступных в системе дисков
+procedure TMainForm.FillDrives;
+var
+    Drive: Char;
+    DriveLetter: string;
+    OldMode: Word;
+begin
+    OldMode := SetErrorMode(SEM_FAILCRITICALERRORS);
+  try
+
+    // Search all drive letters
+    for Drive := 'A' to 'Z' do
+    begin
+      DriveLetter := Drive + ':\';
+
+      case GetDriveType(PChar(DriveLetter)) of
+       DRIVE_FIXED:     SelectDriveCmbx.Items.Add(DriveLetter);
+      end;
+    end;
+
+  finally
+    // Restores previous Windows error mode.
+    SetErrorMode(OldMode);
+  end;
+end;
 
 function RunAsAdmin(const Handle: Hwnd; const Path, Params: string): Boolean;
 var
@@ -119,7 +201,6 @@ function TMainForm.GetFileVersion(const AFileName:string):TFileVersionInfo;
     h : DWORD;
     valrec : PVSFixedFileInfo;
   begin
-    //result:=Default(TFileVersionInfo);
     fn:=AFileName;
     UniqueString(fn);
     size:=GetFileVersionInfoSizeA(pchar(fn),@h);
@@ -161,32 +242,10 @@ begin
     else
       Result := 0
   else
-    ShowMessage('Директория ' + Path + ' уже создана');
-end;
-
-procedure TMainForm.FillDrives;
-var
-    Drive: Char;
-    DriveLetter: string;
-    OldMode: Word;
-begin
-    OldMode := SetErrorMode(SEM_FAILCRITICALERRORS);
-  try
-
-    // Search all drive letters
-    for Drive := 'A' to 'Z' do
     begin
-      DriveLetter := Drive + ':\';
-
-      case GetDriveType(PChar(DriveLetter)) of
-       DRIVE_FIXED:     SelectDriveCmbx.Items.Add(DriveLetter);
-      end;
+      ShowMessage('Директория ' + Path + ' уже создана');
+      Result := 1;
     end;
-
-  finally
-    // Restores previous Windows error mode.
-    SetErrorMode(OldMode);
-  end;
 end;
 
 procedure TMainForm.SelectDriveCmbxChange(Sender: TObject);
@@ -198,24 +257,6 @@ begin
      begin
        PathCloudEdit.Text := SelectDriveCmbx.Text + '1C\Backups\';
      end;
-end;
-
-procedure TMainForm.CheckBases;
-var
- i: Integer;
- BasePath: String;
-begin
-    if BasesListView.Items.Count>0 then
-        begin
-            for i:=0 to BasesListView.Items.Count-1 do
-                begin
-                    BasePath := BasesListView.Items.Item[i].SubItems[0];
-                    BasePath := Copy(BasePath, 7, Length(BasePath)-8);
-
-                    BasesListView.Items.Item[i].Checked :=
-                    not(FileExistsUTF8(BasePath + '\1Cv8tmp.1CD'));
-                end;
-        end;
 end;
 
 procedure TMainForm.OpenV8I;
@@ -282,78 +323,20 @@ begin
         end;
 end;
 
-procedure TMainForm.v8iFileEditChange(Sender: TObject);
+function StrChange(s: string): string;
+const
+  rus: string = '\/:*?"<>|';
+  lat: array[1..9] of string = ('_', '_', '_', '_', '_', '_', '_', '_', '_');
+var
+  p, i, l: integer;
 begin
-    LoadBLFile;
-end;
-
-procedure TMainForm.GenerateBtnClick(Sender: TObject);
-Var
- Strings: TStrings;
- TransStr, BasePath, ArcPath, BackupPath, TransBaseName: String;
- StrCompRes, Reply, BoxStyle: Integer;
-begin
-  StrCompRes := CompareStr(PathCloudEdit.Text, 'Путь к каталогу с архивами');
-  if StrCompRes<>0 then
+  Result := '';
+  l := Length(s);
+  for i := 1 to l do
   begin
-    TransStr             := BasesListView.Selected.Caption;
-    TransBaseName        := AnsiToUtf8(translit.Translit(Utf8ToAnsi(TransStr)));
-    SaveDialog1.FileName := UTF8ToSys('1C.Backup-' + TransBaseName + '.bat');
-
-    if SaveDialog1.Execute then
-      begin
-          Strings := TStringList.Create;
-
-          BasePath := BasesListView.Selected.SubItems[0];
-          BasePath := Copy(BasePath, 7, Length(BasePath)-8);
-
-          ArcPath   := PathCloudEdit.Text + TransBaseName;
-
-          if not(DirectoryExists(UTF8ToSys(ArcPath))) then
-                if not CreateDir(UTF8ToSys(ArcPath)) then
-                    ShowMessage('Не получилось создать директорию базы в Backups!');
-
-          With Strings do
-              begin
-                Add('set sHour=%TIME:~0,2%');
-                Add('set sMinute=%TIME:~3,2%');
-                Add('set s7ZPath="'     + Path7zipEdit.Text     + '"');
-                Add('set sCloudPath="'  + ArcPath  + '"');
-                Add('set sDBPath="'     + BasePath              + '\1Cv8.1CD"');
-                if UsePassCB.Checked then
-                    Add('set sDBPass="'     + PasswordEdit.Text     + '"');
-                Add('set /a iCount = '  + ArcNumSpinEdit.ValueToStr(ArcNumSpinEdit.Value));
-                Add('');
-                Add('for /f "skip=%iCount% usebackq delims=" %%i in (');
-                Add('	`dir /b /a:-d /o:-d /t:w %sCloudPath%`');
-                Add(') do del /f /q %sCloudPath%\%%~i');
-                Add('');
-                if UsePassCB.Checked then
-                    Add('%s7ZPath% a %sCloudPath%\baza[%date%-%sHour: =0%%sMinute%].7z %sDBPath% -p%sDBPass%')
-                else
-                    Add('%s7ZPath% a %sCloudPath%\baza[%date%-%sHour: =0%%sMinute%].7z %sDBPath%');
-              end;
-           Try
-             Strings.Text := UTF8ToCP866(Strings.Text);
-             BackupPath := UTF8ToSys(SaveDialog1.FileName);
-
-             if FileExists(BackupPath) then
-               begin
-                BoxStyle := MB_ICONQUESTION + MB_YESNO;
-                Reply := Application.MessageBox('Файл с таким именем уже существует. Перезаписать?',
-                    'Перезаписать файл?', BoxStyle);
-                if Reply = IDYES then
-                    Strings.SaveToFile(BackupPath);
-               end
-             else
-                Strings.SaveToFile(BackupPath);
-
-
-          Finally
-              Strings.Free;
-          End;
-      end;
-  end else ShowMessage('Не задан каталог с архивами!');
+    p := Pos(s[i], rus);
+    if p<1 then Result := Result + s[i] else Result := Result + lat[p];
+  end;
 end;
 
 procedure TMainForm.Path7zipEditClick(Sender: TObject);
@@ -381,21 +364,6 @@ begin
       end;
 end;
 
-procedure TMainForm.ScanBaseTimerTimer(Sender: TObject);
-begin
-    CheckBases;
-end;
-
-procedure TMainForm.ExitMenuItemClick(Sender: TObject);
-begin
-  Close;
-end;
-
-procedure TMainForm.Choosev8iMenuItemClick(Sender: TObject);
-begin
-  OpenV8I;
-end;
-
 procedure TMainForm.Create1CDirsBtnClick(Sender: TObject);
 var
   DriveLetter: String;
@@ -420,6 +388,26 @@ begin
      end
   else
     ShowMessage('Выберите диск для создания директорий 1С!');
+end;
+
+procedure TMainForm.v8iFileEditChange(Sender: TObject);
+begin
+    LoadBLFile;
+end;
+
+procedure TMainForm.ScanBaseTimerTimer(Sender: TObject);
+begin
+  CheckBases;
+end;
+
+procedure TMainForm.ExitMenuItemClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TMainForm.Choosev8iMenuItemClick(Sender: TObject);
+begin
+  OpenV8I;
 end;
 
 procedure TMainForm.AboutMenuItemClick(Sender: TObject);
@@ -490,8 +478,12 @@ begin
   if FileExists(FilePath) then
     begin
       FileVer  := GetFileVersion(FilePath);
-      ComLine  := ComLine + IntToStr(FileVer.Major)+'.'+IntToStr(FileVer.Minor)+'.'+
-                        IntToStr(FileVer.Revision)+'.'+IntToStr(FileVer.Build);
+
+      ComLine  := '"' + PFPath + '\1cv8\' + IntToStr(FileVer.Major)+'.'+IntToStr(FileVer.Minor)+'.'+
+      IntToStr(FileVer.Revision)+'.'+IntToStr(FileVer.Build) + '\bin\chdbfl.exe" ' + ComLine;
+
+      ShowMessage(ComLine);
+
       ComLineSys := UTF8ToCP1251(ComLine);
       if FileExists('runchdbfl.exe') then
         if SysUtils.Win32MajorVersion >= 6 then
@@ -505,47 +497,71 @@ begin
     ShowMessage('Файл 1cestart.exe не найден!');
 end;
 
-function GetWin(Comand: string): string;
-var
-  buff: array [0 .. $FF] of char;
-begin
-  ExpandEnvironmentStrings(PChar(Comand), buff, SizeOf(buff));
-  Result := buff;
-end;
-
-procedure TMainForm.FormShow(Sender: TObject);
+procedure TMainForm.GenerateBtnClick(Sender: TObject);
 Var
- FilePath: String;
- PartPath: String;
-
- AppDataPath: String;
+ Strings: TStrings;
+ TransStr, BasePath, ArcPath, BackupPath, TransBaseName: String;
+ StrCompRes, Reply, BoxStyle: Integer;
 begin
+  StrCompRes := CompareStr(PathCloudEdit.Text, 'Путь к каталогу с архивами');
+  if StrCompRes<>0 then
+  begin
+    TransStr             := BasesListView.Selected.Caption;
+    TransBaseName        := StrChange(TransStr);
+    SaveDialog1.FileName := '1C.Backup-' + TransBaseName + '.bat';
 
-  AppDataPath := GetEnvironmentVariableUTF8('APPDATA');
-  //GetWin('%AppData%');
-  v8iFileEdit.Text := AppDataPath + '\1C\1CEStart\ibases.v8i';
+    if SaveDialog1.Execute then
+      begin
+          Strings := TStringList.Create;
 
-  // Проверка установленного архиватора 7zip
-  PartPath := GetEnvironmentVariableUTF8('PROGRAMFILES');
-  FilePath := PartPath + '\7-Zip\7z.exe';
-  if(FileExistsUTF8(FilePath))then
-      Path7zipEdit.Text := FilePath
-  else
-    begin
-      PartPath := Copy(PartPath, 0,(length(PartPath)-6));
-      FilePath := PartPath + '\7-Zip\7z.exe';
-      if(FileExistsUTF8(FilePath))then
-         Path7zipEdit.Text := FilePath
-    end;
+          BasePath := BasesListView.Selected.SubItems[0];
+          BasePath := Copy(BasePath, 7, Length(BasePath)-8);
 
-  // Установка пути сохранения скрипта по умолчанию
-  SaveDialog1.InitialDir := FilePath;
+          ArcPath   := PathCloudEdit.Text + TransBaseName;
 
-  // Проверка запущенных баз
-  CheckBases;
+          if not(DirectoryExists(UTF8ToSys(ArcPath))) then
+                if not CreateDir(UTF8ToSys(ArcPath)) then
+                    ShowMessage('Не получилось создать директорию базы в Backups!');
 
-  // Заполнение списка системных дисков
-  FillDrives;
+          With Strings do
+              begin
+                Add('set sHour=%TIME:~0,2%');
+                Add('set sMinute=%TIME:~3,2%');
+                Add('set s7ZPath="'     + Path7zipEdit.Text     + '"');
+                Add('set sCloudPath="'  + ArcPath  + '"');
+                Add('set sDBPath="'     + BasePath              + '\1Cv8.1CD"');
+                if UsePassCB.Checked then
+                    Add('set sDBPass="'     + PasswordEdit.Text     + '"');
+                Add('set /a iCount = '  + ArcNumSpinEdit.ValueToStr(ArcNumSpinEdit.Value));
+                Add('');
+                Add('for /f "skip=%iCount% usebackq delims=" %%i in (');
+                Add('	`dir /b /a:-d /o:-d /t:w %sCloudPath%`');
+                Add(') do del /f /q %sCloudPath%\%%~i');
+                Add('');
+                if UsePassCB.Checked then
+                    Add('%s7ZPath% a %sCloudPath%\baza[%date%-%sHour: =0%%sMinute%].7z %sDBPath% -p%sDBPass%')
+                else
+                    Add('%s7ZPath% a %sCloudPath%\baza[%date%-%sHour: =0%%sMinute%].7z %sDBPath%');
+              end;
+           Try
+             Strings.Text := UTF8ToCP866(Strings.Text);
+             BackupPath := UTF8ToSys(SaveDialog1.FileName);
+
+             if FileExists(BackupPath) then
+               begin
+                BoxStyle := MB_ICONQUESTION + MB_YESNO;
+                Reply := Application.MessageBox('Файл с таким именем уже существует. Перезаписать?',
+                    'Перезаписать файл?', BoxStyle);
+                if Reply = IDYES then
+                    Strings.SaveToFile(BackupPath);
+               end
+             else
+                Strings.SaveToFile(BackupPath);
+           Finally
+              Strings.Free;
+          End;
+      end;
+  end else ShowMessage('Не задан каталог с архивами!');
 end;
 
 end.
