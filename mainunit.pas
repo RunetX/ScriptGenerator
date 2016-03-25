@@ -144,7 +144,7 @@ begin
                     BasePath := Copy(BasePath, 7, Length(BasePath)-8);
 
                     BasesListView.Items.Item[i].Checked :=
-                    not(FileExistsUTF8(BasePath + '\1Cv8tmp.1CD'));
+                    not(FileExistsUTF8(BasePath + '\1Cv8.1CL'));
                 end;
         end;
 end;
@@ -528,20 +528,27 @@ begin
                 Add('set sHour=%TIME:~0,2%');
                 Add('set sMinute=%TIME:~3,2%');
                 Add('set s7ZPath="'     + Path7zipEdit.Text     + '"');
-                Add('set sCloudPath="'  + ArcPath  + '"');
+                Add('set sArcPath="'    + ArcPath  + '"');
                 Add('set sDBPath="'     + BasePath              + '\1Cv8.1CD"');
                 if UsePassCB.Checked then
                     Add('set sDBPass="'     + PasswordEdit.Text     + '"');
                 Add('set /a iCount = '  + ArcNumSpinEdit.ValueToStr(ArcNumSpinEdit.Value));
                 Add('');
+                Add('if not exist "'+ BasePath +'\1Cv8.1CL" goto :start_arc');
+                Add('echo База данных открыта. Выйдите из 1С!');
+                Add('pause');
+                Add('');
+                Add(':start_arc');
                 Add('for /f "skip=%iCount% usebackq delims=" %%i in (');
-                Add('	`dir /b /a:-d /o:-d /t:w %sCloudPath%`');
-                Add(') do del /f /q %sCloudPath%\%%~i');
+                Add('	`dir /b /a:-d /o:-d /t:w %sArcPath%`');
+                Add(') do del /f /q %sArcPath%\%%~i');
                 Add('');
                 if UsePassCB.Checked then
-                    Add('%s7ZPath% a %sCloudPath%\baza[%date%-%sHour: =0%%sMinute%].7z %sDBPath% -p%sDBPass%')
+                    Add('%s7ZPath% a %sArcPath%\baza[%date%-%sHour: =0%%sMinute%].7z %sDBPath% -p%sDBPass%')
                 else
-                    Add('%s7ZPath% a %sCloudPath%\baza[%date%-%sHour: =0%%sMinute%].7z %sDBPath%');
+                    Add('%s7ZPath% a %sArcPath%\baza[%date%-%sHour: =0%%sMinute%].7z %sDBPath%');
+                Add('');
+                Add('if not %errorlevel%==0 pause');
               end;
            Try
              Strings.Text := UTF8ToCP866(Strings.Text);
