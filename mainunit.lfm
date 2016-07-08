@@ -1,13 +1,13 @@
 object MainForm: TMainForm
-  Left = 425
+  Left = 315
   Height = 385
-  Top = 153
+  Top = 137
   Width = 610
-  BorderIcons = [biSystemMenu]
-  BorderStyle = bsToolWindow
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   BorderWidth = 1
-  Caption = 'ИТС помощник'
-  ClientHeight = 366
+  Caption = 'ИТС-помощник'
+  ClientHeight = 365
   ClientWidth = 610
   Menu = MainMenu
   OnShow = FormShow
@@ -15,7 +15,7 @@ object MainForm: TMainForm
   LCLVersion = '1.6.0.4'
   object PageControl1: TPageControl
     Left = 1
-    Height = 364
+    Height = 363
     Top = 1
     Width = 608
     ActivePage = TabSheet1
@@ -24,26 +24,26 @@ object MainForm: TMainForm
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Формирование файла сценария'
-      ClientHeight = 338
+      ClientHeight = 335
       ClientWidth = 600
       object v8iFileEdit: TEdit
         Left = 493
-        Height = 21
+        Height = 23
         Top = 56
         Width = 99
         OnChange = v8iFileEditChange
         ParentFont = False
-        TabOrder = 3
+        TabOrder = 2
         Visible = False
       end
       object Path7zipEdit: TEdit
         Left = 493
-        Height = 21
+        Height = 23
         Top = 88
         Width = 99
         OnClick = Path7zipEditClick
         ParentFont = False
-        TabOrder = 5
+        TabOrder = 4
         Text = 'Архиватор не найден! Кликните для указания пути к 7z.exe'
         Visible = False
       end
@@ -83,136 +83,52 @@ object MainForm: TMainForm
       end
       object StatusBar1: TStatusBar
         Left = 0
-        Height = 20
-        Top = 318
+        Height = 23
+        Top = 312
         Width = 600
         Panels = <>
       end
       object GroupBox1: TGroupBox
-        Left = 4
-        Height = 64
-        Top = 176
-        Width = 586
+        Left = 14
+        Height = 136
+        Top = 168
+        Width = 284
         Caption = 'Структура каталогов 1С'
-        ClientHeight = 46
-        ClientWidth = 582
+        ClientHeight = 116
+        ClientWidth = 280
+        Color = clNone
+        ParentColor = False
         TabOrder = 1
         object SelectDriveCmbx: TComboBox
           Left = 16
-          Height = 21
-          Top = 8
-          Width = 116
-          ItemHeight = 13
+          Height = 23
+          Top = 24
+          Width = 152
+          ItemHeight = 15
           OnChange = SelectDriveCmbxChange
           TabOrder = 0
           Text = 'Выберите диск...'
         end
         object Create1CDirsBtn: TButton
-          Left = 136
+          Left = 176
           Height = 25
-          Top = 8
+          Top = 24
           Width = 96
           Caption = 'Создать'
-          Font.Style = [fsBold]
           OnClick = Create1CDirsBtnClick
           ParentFont = False
           TabOrder = 1
         end
         object PathCloudEdit: TEdit
-          Left = 256
-          Height = 21
-          Top = 8
-          Width = 318
+          Left = 16
+          Height = 23
+          Top = 80
+          Width = 256
           OnClick = PathCloudEditClick
           ParentFont = False
           ReadOnly = True
           TabOrder = 2
           Text = 'Путь к каталогу с архивами'
-        end
-      end
-      object Panel1: TPanel
-        Left = 4
-        Height = 56
-        Top = 248
-        Width = 586
-        ClientHeight = 56
-        ClientWidth = 586
-        Color = clMenuHighlight
-        ParentColor = False
-        TabOrder = 2
-        object Label4: TLabel
-          Left = 8
-          Height = 13
-          Top = 3
-          Width = 155
-          Caption = 'Сложный пароль к архиву'
-          Font.Color = clWhite
-          Font.Style = [fsBold]
-          ParentColor = False
-          ParentFont = False
-        end
-        object PasswordEdit: TEdit
-          Left = 16
-          Height = 21
-          Top = 21
-          Width = 264
-          ParentFont = False
-          TabOrder = 0
-          Text = '$StR0ng_Pa55W0Rd_h3R3$'
-        end
-        object UsePassCB: TCheckBox
-          Left = 296
-          Height = 17
-          Top = 23
-          Width = 20
-          Color = clHighlightText
-          Font.Color = clHighlightText
-          ParentColor = False
-          ParentFont = False
-          TabOrder = 1
-        end
-        object Label5: TLabel
-          Left = 424
-          Height = 13
-          Top = 3
-          Width = 121
-          Caption = 'Количество архивов'
-          Font.Color = clHighlightText
-          Font.Style = [fsBold]
-          ParentColor = False
-          ParentFont = False
-        end
-        object ArcNumSpinEdit: TSpinEdit
-          Left = 432
-          Height = 21
-          Top = 21
-          Width = 40
-          MinValue = 1
-          ParentFont = False
-          TabOrder = 2
-          Value = 5
-        end
-        object GenerateBtn: TButton
-          Left = 480
-          Height = 25
-          Top = 19
-          Width = 96
-          Caption = 'Создать .bat'
-          Font.Style = [fsBold]
-          OnClick = GenerateBtnClick
-          ParentFont = False
-          TabOrder = 3
-        end
-        object Label1: TLabel
-          Left = 288
-          Height = 13
-          Top = 3
-          Width = 116
-          Caption = 'Установить пароль'
-          Font.Color = clHighlightText
-          Font.Style = [fsBold]
-          ParentColor = False
-          ParentFont = False
         end
       end
       object CheckBDBitBtn: TBitBtn
@@ -251,7 +167,100 @@ object MainForm: TMainForm
           F0F0F1F0F0FEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         }
         OnClick = CheckBDBitBtnClick
+        TabOrder = 5
+      end
+      object GroupBox2: TGroupBox
+        Left = 304
+        Height = 136
+        Top = 168
+        Width = 297
+        Caption = 'Параметры скрипта резервного копирования'
+        ClientHeight = 116
+        ClientWidth = 293
+        ParentColor = False
         TabOrder = 6
+        object Label5: TLabel
+          Left = 8
+          Height = 15
+          Top = 5
+          Width = 112
+          Caption = 'Количество архивов'
+          Font.Color = clCaptionText
+          ParentColor = False
+          ParentFont = False
+        end
+        object ArcNumSpinEdit: TSpinEdit
+          Left = 87
+          Height = 23
+          Top = 26
+          Width = 42
+          MinValue = 1
+          ParentFont = False
+          TabOrder = 0
+          Value = 5
+        end
+        object Label4: TLabel
+          Left = 11
+          Height = 15
+          Top = 58
+          Width = 112
+          Caption = 'Отложенный запуск'
+          Font.Color = clCaptionText
+          ParentColor = False
+          ParentFont = False
+          OnClick = Label4Click
+        end
+        object DelayedStartSpinEdit: TSpinEdit
+          Left = 89
+          Height = 23
+          Top = 80
+          Width = 40
+          Increment = 10
+          MaxValue = 360
+          ParentFont = False
+          TabOrder = 1
+        end
+        object UsePassCB: TCheckBox
+          Left = 152
+          Height = 19
+          Top = 3
+          Width = 20
+          Color = clHighlightText
+          Font.Color = clHighlightText
+          ParentColor = False
+          ParentFont = False
+          TabOrder = 2
+        end
+        object Label1: TLabel
+          Left = 176
+          Height = 15
+          Top = 5
+          Width = 105
+          Caption = 'Установить пароль'
+          Font.Color = clCaptionText
+          ParentColor = False
+          ParentFont = False
+        end
+        object PasswordEdit: TEdit
+          Left = 152
+          Height = 23
+          Top = 29
+          Width = 136
+          ParentFont = False
+          TabOrder = 3
+          Text = '$StR0ng_Pa55W0Rd$'
+        end
+        object GenerateBtn: TButton
+          Left = 152
+          Height = 49
+          Top = 64
+          Width = 136
+          Caption = 'Сохранить'
+          Font.Style = [fsBold]
+          OnClick = GenerateBtnClick
+          ParentFont = False
+          TabOrder = 4
+        end
       end
     end
   end

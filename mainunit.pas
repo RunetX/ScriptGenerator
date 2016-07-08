@@ -24,6 +24,7 @@ type
   TMainForm = class(TForm)
     AboutMenuItem: TMenuItem;
     ArcNumSpinEdit: TSpinEdit;
+    DelayedStartSpinEdit: TSpinEdit;
     BasesListView: TListView;
     CheckBDBitBtn: TBitBtn;
     Choosev8iMenuItem: TMenuItem;
@@ -32,6 +33,7 @@ type
     FileMenuItem: TMenuItem;
     GenerateBtn: TButton;
     GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
     Label1: TLabel;
     Label4: TLabel;
     Label5: TLabel;
@@ -39,7 +41,6 @@ type
     MainMenu: TMainMenu;
     OpenDialog1: TOpenDialog;
     PageControl1: TPageControl;
-    Panel1: TPanel;
     PasswordEdit: TEdit;
     Path7zipEdit: TEdit;
     PathCloudEdit: TEdit;
@@ -64,6 +65,7 @@ type
     procedure ExitMenuItemClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure GenerateBtnClick(Sender: TObject);
+    procedure Label4Click(Sender: TObject);
     procedure Path7zipEditClick(Sender: TObject);
     procedure PathCloudEditClick(Sender: TObject);
     procedure ScanBaseTimerTimer(Sender: TObject);
@@ -356,10 +358,10 @@ begin
       begin
         PathLen := Length(SelectDirectoryDialog1.FileName);
         if PathLen>3 then
-            PathCloudEdit.Text := SelectDirectoryDialog1.FileName
+            PathCloudEdit.Text := SelectDirectoryDialog1.FileName + '\'
         else
             begin
-               PathCloudEdit.Text := Copy(SelectDirectoryDialog1.FileName, 0,(PathLen-1));
+               PathCloudEdit.Text := Copy(SelectDirectoryDialog1.FileName, 0,(PathLen));
             end;
       end;
 end;
@@ -376,10 +378,11 @@ begin
      begin
         DriveLetter := SelectDriveCmbx.Text;
         ErrorCounter := ErrorCounter + CrDir(DriveLetter + '1C');
-        ErrorCounter := ErrorCounter + CrDir(DriveLetter + '1C\Addons');
-        ErrorCounter := ErrorCounter + CrDir(DriveLetter + '1C\Backups');
-        ErrorCounter := ErrorCounter + CrDir(DriveLetter + '1C\Bases');
-        ErrorCounter := ErrorCounter + CrDir(DriveLetter + '1C\Updates');
+        ErrorCounter := ErrorCounter + CrDir(DriveLetter + '1C\Addons');    // Дополнения 1С (внешние обработки, печатные формы)
+        ErrorCounter := ErrorCounter + CrDir(DriveLetter + '1C\Backups');   // Резервные копии информационных баз
+        ErrorCounter := ErrorCounter + CrDir(DriveLetter + '1C\Bases');     // Информационные базы
+        ErrorCounter := ErrorCounter + CrDir(DriveLetter + '1C\Services');  // Каталог для сервисов ИТС
+        ErrorCounter := ErrorCounter + CrDir(DriveLetter + '1C\Updates');   // Обновления
         ErrorCounter := ErrorCounter + CrDir(DriveLetter + '1C\Updates\Cfgs');
         ErrorCounter := ErrorCounter + CrDir(DriveLetter + '1C\Updates\Plts');
 
@@ -525,6 +528,8 @@ begin
 
           With Strings do
               begin
+                if DelayedStartSpinEdit.Value>0 then
+                  Add('timeout /t '+IntToStr(DelayedStartSpinEdit.Value)+' /nobreak');
                 Add('set sHour=%TIME:~0,2%');
                 Add('set sMinute=%TIME:~3,2%');
                 Add('set s7ZPath="'     + Path7zipEdit.Text     + '"');
@@ -534,9 +539,11 @@ begin
                     Add('set sDBPass="'     + PasswordEdit.Text     + '"');
                 Add('set /a iCount = '  + ArcNumSpinEdit.ValueToStr(ArcNumSpinEdit.Value));
                 Add('');
+                Add(':open_base_condition');
                 Add('if not exist "'+ BasePath +'\1Cv8.1CL" goto :start_arc');
                 Add('echo База данных открыта. Выйдите из 1С!');
                 Add('pause');
+                Add('goto :open_base_condition');
                 Add('');
                 Add(':start_arc');
                 Add('for /f "skip=%iCount% usebackq delims=" %%i in (');
@@ -569,6 +576,11 @@ begin
           End;
       end;
   end else ShowMessage('Не задан каталог с архивами!');
+end;
+
+procedure TMainForm.Label4Click(Sender: TObject);
+begin
+
 end;
 
 end.
