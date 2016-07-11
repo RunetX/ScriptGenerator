@@ -35,6 +35,7 @@ type
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     Label1: TLabel;
+    Label2: TLabel;
     Label4: TLabel;
     Label5: TLabel;
     Label7: TLabel;
@@ -65,7 +66,6 @@ type
     procedure ExitMenuItemClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure GenerateBtnClick(Sender: TObject);
-    procedure Label4Click(Sender: TObject);
     procedure Path7zipEditClick(Sender: TObject);
     procedure PathCloudEditClick(Sender: TObject);
     procedure ScanBaseTimerTimer(Sender: TObject);
@@ -421,17 +421,18 @@ end;
 procedure TMainForm.BasesListViewChange(Sender: TObject; Item: TListItem;
   Change: TItemChange);
 begin
-  if (Change=ctState) then
-     SelectedListItemStateSave;
+     if (Change=ctState) then
+        SelectedListItemStateSave;
 end;
 
 procedure TMainForm.BasesListViewEnter(Sender: TObject);
 begin
   if BasesListView.Selected = nil then
-  begin
-    FListItem :=BasesListView.Items[0]; // Initialization
-    SelectedListItemStateRestore;
-  end;
+    if BasesListView.ItemIndex > -1 then
+    begin
+      FListItem :=BasesListView.Items[0]; // Initialization
+      SelectedListItemStateRestore;
+    end;
 end;
 
 procedure TMainForm.BasesListViewMouseUp(Sender: TObject; Button: TMouseButton;
@@ -456,8 +457,8 @@ end;
 
 procedure TMainForm.BasesListViewClick(Sender: TObject);
 begin
- if Assigned(BasesListView.Selected) then
-   StatusBar1.SimpleText := BasesListView.Items[BasesListView.Selected.Index].SubItems[0]
+  if Assigned(BasesListView.Selected) then
+     StatusBar1.SimpleText := BasesListView.Items[BasesListView.Selected.Index].SubItems[0]
 end;
 
 procedure TMainForm.CheckBDBitBtnClick(Sender: TObject);
@@ -576,11 +577,6 @@ begin
           End;
       end;
   end else ShowMessage('Не задан каталог с архивами!');
-end;
-
-procedure TMainForm.Label4Click(Sender: TObject);
-begin
-
 end;
 
 end.

@@ -122,13 +122,21 @@ object MainForm: TMainForm
         object PathCloudEdit: TEdit
           Left = 16
           Height = 23
-          Top = 80
+          Top = 64
           Width = 256
           OnClick = PathCloudEditClick
           ParentFont = False
           ReadOnly = True
           TabOrder = 2
           Text = 'Путь к каталогу с архивами'
+        end
+        object Label2: TLabel
+          Left = 16
+          Height = 15
+          Top = 90
+          Width = 258
+          Caption = '(кликните по полю для задания пути вручную)'
+          ParentColor = False
         end
       end
       object CheckBDBitBtn: TBitBtn
@@ -185,7 +193,6 @@ object MainForm: TMainForm
           Top = 5
           Width = 112
           Caption = 'Количество архивов'
-          Font.Color = clCaptionText
           ParentColor = False
           ParentFont = False
         end
@@ -205,10 +212,8 @@ object MainForm: TMainForm
           Top = 58
           Width = 112
           Caption = 'Отложенный запуск'
-          Font.Color = clCaptionText
           ParentColor = False
           ParentFont = False
-          OnClick = Label4Click
         end
         object DelayedStartSpinEdit: TSpinEdit
           Left = 89
@@ -237,7 +242,6 @@ object MainForm: TMainForm
           Top = 5
           Width = 105
           Caption = 'Установить пароль'
-          Font.Color = clCaptionText
           ParentColor = False
           ParentFont = False
         end
@@ -252,7 +256,7 @@ object MainForm: TMainForm
         end
         object GenerateBtn: TButton
           Left = 152
-          Height = 49
+          Height = 41
           Top = 64
           Width = 136
           Caption = 'Сохранить'
