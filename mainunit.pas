@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, LazFileUtils, Forms, Controls, Graphics, Dialogs, StdCtrls,
   Menus, Spin, ComCtrls, ExtCtrls, Buttons, INIFiles, Windows,
-  aboutunit, lconvencoding, ShellApi, lazutf8;
+  aboutunit, lconvencoding, ShellApi, lazutf8, Clipbrd;
 
 type
     TFileVersionInfo = record
@@ -36,6 +36,7 @@ type
     GroupBox2: TGroupBox;
     Label1: TLabel;
     Label2: TLabel;
+    StatusLabel: TLabel;
     Label4: TLabel;
     Label5: TLabel;
     Label7: TLabel;
@@ -49,7 +50,6 @@ type
     ScanBaseTimer: TTimer;
     SelectDirectoryDialog1: TSelectDirectoryDialog;
     SelectDriveCmbx: TComboBox;
-    StatusBar1: TStatusBar;
     TabSheet1: TTabSheet;
     UsePassCB: TCheckBox;
     v8iFileEdit: TEdit;
@@ -59,7 +59,6 @@ type
     procedure BasesListViewEnter(Sender: TObject);
     procedure BasesListViewMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure BasesListViewClick(Sender: TObject);
     procedure CheckBDBitBtnClick(Sender: TObject);
     procedure Choosev8iMenuItemClick(Sender: TObject);
     procedure Create1CDirsBtnClick(Sender: TObject);
@@ -70,6 +69,7 @@ type
     procedure PathCloudEditClick(Sender: TObject);
     procedure ScanBaseTimerTimer(Sender: TObject);
     procedure SelectDriveCmbxChange(Sender: TObject);
+    procedure StatusLabelClick(Sender: TObject);
     procedure v8iFileEditChange(Sender: TObject);
     function CrDir(Path: String):integer;
     function GetFileVersion(const AFileName:string):TFileVersionInfo;
@@ -261,6 +261,12 @@ begin
      end;
 end;
 
+procedure TMainForm.StatusLabelClick(Sender: TObject);
+begin
+  Clipboard().AsText := Copy(StatusLabel.Caption, 7, Length(StatusLabel.Caption)-8);
+  ShowMessage('Путь к информационной базе скопирован в буфер обмена');
+end;
+
 procedure TMainForm.OpenV8I;
 begin
     OpenDialog1.Filter:= 'Файл списка информационных баз|ibases.v8i';
@@ -276,6 +282,7 @@ var
  MarkHolder: Cardinal;
  IniSections: TStringList;
  IniSection: String;
+ TmpBasePath: String;
  Reply: Integer;
 begin
   // Чтение списка информационных баз
@@ -303,15 +310,17 @@ begin
 
       for IniSection in IniSections do
         begin
-          with BasesListView.Items.Add do
-          begin
-            Caption := IniSection;
-            SubItems.Add(IniF.ReadString(IniSection, 'Connect', ''));
-          end;
+          TmpBasePath := IniF.ReadString(IniSection, 'Connect', '');
+          if TmpBasePath <> '' then
+            with BasesListView.Items.Add do
+            begin
+              Caption := IniSection;
+              SubItems.Add(TmpBasePath);
+            end;
         end;
       BasesListView.Items.Item[0].Selected := true;
       BasesListView.Items.Item[0].Focused  := true;
-      StatusBar1.SimpleText:= BasesListView.Items[0].SubItems[0];
+      StatusLabel.Caption := BasesListView.Items[0].SubItems[0];
     finally
       IniF.Free;
       FileStream.Free;
@@ -421,8 +430,12 @@ end;
 procedure TMainForm.BasesListViewChange(Sender: TObject; Item: TListItem;
   Change: TItemChange);
 begin
-     if (Change=ctState) then
-        SelectedListItemStateSave;
+  if Assigned(BasesListView.Selected) then
+     begin
+     StatusLabel.Caption := BasesListView.Items[BasesListView.Selected.Index].SubItems[0];
+     end;
+  if (Change=ctState) then
+     SelectedListItemStateSave;
 end;
 
 procedure TMainForm.BasesListViewEnter(Sender: TObject);
@@ -455,12 +468,6 @@ begin
   FListItem := BasesListView.Selected;
 end;
 
-procedure TMainForm.BasesListViewClick(Sender: TObject);
-begin
-  if Assigned(BasesListView.Selected) then
-     StatusBar1.SimpleText := BasesListView.Items[BasesListView.Selected.Index].SubItems[0]
-end;
-
 procedure TMainForm.CheckBDBitBtnClick(Sender: TObject);
 var
   PFPath:     String;
@@ -473,7 +480,7 @@ begin
 
   ComLine := '1 ';
   ComLine := ComLine + '"' +
-             Copy(StatusBar1.SimpleText, 7, Length(StatusBar1.SimpleText)-8)
+             Copy(StatusLabel.Caption, 7, Length(StatusLabel.Caption)-8)
              + '\1Cv8.1CD" ';
 
   PFPath   := GetEnvironmentVariableUTF8('PROGRAMFILES');

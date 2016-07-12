@@ -1,13 +1,13 @@
 object MainForm: TMainForm
-  Left = 315
-  Height = 385
-  Top = 137
+  Left = 319
+  Height = 384
+  Top = 141
   Width = 610
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   BorderWidth = 1
   Caption = 'ИТС-помощник'
-  ClientHeight = 365
+  ClientHeight = 364
   ClientWidth = 610
   Menu = MainMenu
   OnShow = FormShow
@@ -15,7 +15,7 @@ object MainForm: TMainForm
   LCLVersion = '1.6.0.4'
   object PageControl1: TPageControl
     Left = 1
-    Height = 363
+    Height = 362
     Top = 1
     Width = 608
     ActivePage = TabSheet1
@@ -24,7 +24,7 @@ object MainForm: TMainForm
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Формирование файла сценария'
-      ClientHeight = 335
+      ClientHeight = 334
       ClientWidth = 600
       object v8iFileEdit: TEdit
         Left = 493
@@ -43,7 +43,7 @@ object MainForm: TMainForm
         Width = 99
         OnClick = Path7zipEditClick
         ParentFont = False
-        TabOrder = 4
+        TabOrder = 3
         Text = 'Архиватор не найден! Кликните для указания пути к 7z.exe'
         Visible = False
       end
@@ -56,22 +56,21 @@ object MainForm: TMainForm
         Columns = <        
           item
             Caption = 'Название информационной базы'
-            MaxWidth = 470
+            MaxWidth = 455
             MinWidth = 150
-            Width = 460
+            Width = 445
           end>
         GridLines = True
         HideSelection = False
         ParentFont = False
         ReadOnly = True
         RowSelect = True
-        ScrollBars = ssVertical
+        ScrollBars = ssAutoVertical
         SortColumn = 0
         SortType = stText
         TabOrder = 0
         ViewStyle = vsReport
         OnChange = BasesListViewChange
-        OnClick = BasesListViewClick
         OnEnter = BasesListViewEnter
       end
       object Label7: TLabel
@@ -81,13 +80,6 @@ object MainForm: TMainForm
         Width = 1
         ParentColor = False
       end
-      object StatusBar1: TStatusBar
-        Left = 0
-        Height = 23
-        Top = 312
-        Width = 600
-        Panels = <>
-      end
       object GroupBox1: TGroupBox
         Left = 14
         Height = 136
@@ -96,7 +88,6 @@ object MainForm: TMainForm
         Caption = 'Структура каталогов 1С'
         ClientHeight = 116
         ClientWidth = 280
-        Color = clNone
         ParentColor = False
         TabOrder = 1
         object SelectDriveCmbx: TComboBox
@@ -175,18 +166,18 @@ object MainForm: TMainForm
           F0F0F1F0F0FEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         }
         OnClick = CheckBDBitBtnClick
-        TabOrder = 5
+        TabOrder = 4
       end
       object GroupBox2: TGroupBox
         Left = 304
         Height = 136
         Top = 168
-        Width = 297
+        Width = 288
         Caption = 'Параметры скрипта резервного копирования'
         ClientHeight = 116
-        ClientWidth = 293
+        ClientWidth = 284
         ParentColor = False
-        TabOrder = 6
+        TabOrder = 5
         object Label5: TLabel
           Left = 8
           Height = 15
@@ -197,7 +188,7 @@ object MainForm: TMainForm
           ParentFont = False
         end
         object ArcNumSpinEdit: TSpinEdit
-          Left = 87
+          Left = 78
           Height = 23
           Top = 26
           Width = 42
@@ -216,7 +207,7 @@ object MainForm: TMainForm
           ParentFont = False
         end
         object DelayedStartSpinEdit: TSpinEdit
-          Left = 89
+          Left = 80
           Height = 23
           Top = 80
           Width = 40
@@ -226,7 +217,7 @@ object MainForm: TMainForm
           TabOrder = 1
         end
         object UsePassCB: TCheckBox
-          Left = 152
+          Left = 136
           Height = 19
           Top = 3
           Width = 20
@@ -237,7 +228,7 @@ object MainForm: TMainForm
           TabOrder = 2
         end
         object Label1: TLabel
-          Left = 176
+          Left = 160
           Height = 15
           Top = 5
           Width = 105
@@ -246,16 +237,16 @@ object MainForm: TMainForm
           ParentFont = False
         end
         object PasswordEdit: TEdit
-          Left = 152
+          Left = 136
           Height = 23
-          Top = 29
+          Top = 26
           Width = 136
           ParentFont = False
           TabOrder = 3
           Text = '$StR0ng_Pa55W0Rd$'
         end
         object GenerateBtn: TButton
-          Left = 152
+          Left = 136
           Height = 41
           Top = 64
           Width = 136
@@ -265,6 +256,15 @@ object MainForm: TMainForm
           ParentFont = False
           TabOrder = 4
         end
+      end
+      object StatusLabel: TLabel
+        Left = 6
+        Height = 15
+        Top = 315
+        Width = 60
+        Caption = 'StatusLabel'
+        ParentColor = False
+        OnClick = StatusLabelClick
       end
     end
   end
